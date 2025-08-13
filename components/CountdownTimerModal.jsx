@@ -33,20 +33,21 @@ function CountdownTimerModal({ handleModal, selectedTimer }) {
         }, 1000);
       } else if (timeLeft === 0 && currentRound != numRounds) {
         if (isRunning && restTimeLeft > 0 && currentRound < numRounds) {
-          console.log("@@@@");
           setIsRestTime(true);
           interval = setInterval(() => {
             console.log(restTimeLeft);
             setRestTimeLeft((prevTime) => prevTime - 1);
           }, 1000);
         } else if (restTimeLeft === 0) {
-          console.log("TEST");
-          setIsRestTime(false);
-          //setRestTimeLeft(parseInt(selectedTimer.restTime));
           setCurrentRound(currentRound + 1);
-          setRestTimeLeft(parseInt(selectedTimer.rest));
+          setRestTimeLeft(parseInt(selectedTimer.restTime));
+          setTimeLeft(
+            parseInt(selectedTimer.minutes * 60) +
+              parseInt(selectedTimer.seconds)
+          );
+          setIsRestTime(false);
         }
-      } else if (timeLeft === 0 && currentRound > numRounds) {
+      } else if (timeLeft === 0 && currentRound === numRounds) {
         setIsRunning(false);
       }
       return () => clearInterval(interval);
