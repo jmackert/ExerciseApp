@@ -1,14 +1,10 @@
-import React, { useState, useEffect, useRef, use } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Image,
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   SafeAreaView,
-  Modal,
-  FlatList,
-  Platform,
 } from "react-native";
 
 function CountdownTimerModal({ handleModal, selectedTimer }) {
@@ -28,14 +24,12 @@ function CountdownTimerModal({ handleModal, selectedTimer }) {
     while (currentRound <= numRounds) {
       if (isRunning && timeLeft > 0 && currentRound <= numRounds) {
         interval = setInterval(() => {
-          console.log(timeLeft);
           setTimeLeft((prevTime) => prevTime - 1);
         }, 1000);
       } else if (timeLeft === 0 && currentRound != numRounds) {
         if (isRunning && restTimeLeft > 0 && currentRound < numRounds) {
           setIsRestTime(true);
           interval = setInterval(() => {
-            console.log(restTimeLeft);
             setRestTimeLeft((prevTime) => prevTime - 1);
           }, 1000);
         } else if (restTimeLeft === 0) {
@@ -95,37 +89,41 @@ function CountdownTimerModal({ handleModal, selectedTimer }) {
         ) : (
           <Text>00 : {FormatTime().displatRestSeconds}</Text>
         )}
-
-        <TouchableOpacity
-          style={styles.startTimerContainer}
-          onPress={() => {
-            StartTimer(true);
-          }}
-        >
-          <View style={styles.bottomScreenLeft}>
-            <Text style={styles.startTimerButton}>Start</Text>
+        {!isRunning ? (
+          <TouchableOpacity
+            style={styles.startTimerContainer}
+            onPress={() => {
+              StartTimer();
+            }}
+          >
+            <View style={styles.bottomScreenLeft}>
+              <Text style={styles.startTimerButton}>Start</Text>
+            </View>
+          </TouchableOpacity>
+        ) : (
+          <View>
+            <TouchableOpacity
+              style={styles.stopTimerContainer}
+              onPress={() => {
+                StopTimer();
+              }}
+            >
+              <View style={styles.bottomScreenRight}>
+                <Text style={styles.stopTimerContainer}>Stop</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.pasueTimerContainer}
+              onPress={() => {
+                PauseTimer();
+              }}
+            >
+              <View style={styles.bottomScreenMiddle}>
+                <Text style={styles.pasueTimerContainer}>Pasue</Text>
+              </View>
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.stopTimerContainer}
-          onPress={() => {
-            StopTimer(true);
-          }}
-        >
-          <View style={styles.bottomScreenRight}>
-            <Text style={styles.stopTimerContainer}>Stop</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.pasueTimerContainer}
-          onPress={() => {
-            PauseTimer(true);
-          }}
-        >
-          <View style={styles.bottomScreenMiddle}>
-            <Text style={styles.pasueTimerContainer}>Pasue</Text>
-          </View>
-        </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );

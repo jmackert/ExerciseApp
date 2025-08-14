@@ -14,6 +14,7 @@ import {
 import Timer from "./Timer";
 import CreateTimerModal from "./CreateTimerModal";
 import CountdownTimerModal from "./CountdownTimerModal";
+import DeleteModal from "./DeleteModal";
 
 import colors from "../app/config/colors";
 
@@ -22,6 +23,8 @@ function Timers() {
   const [openCreateTimerModal, setOpenCreateTimerModal] = useState(false);
   const [openCountdownTimerModal, setOpenCountdownTimerModal] = useState(false);
   const [selectedTimer, setSelectedTimer] = useState();
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [timerToDelete, setTimerToDelete] = useState();
 
   const handleAddTimer = (timerTitle, minutes, seconds, rounds, restTime) => {
     if (!timerTitle) {
@@ -53,7 +56,6 @@ function Timers() {
     let timersCopy = [...timerItems];
     timersCopy.splice(index, 1);
     setTimerItems(timersCopy);
-    console.log("Select");
   };
 
   const newHandleDeleteTimer = (index) => {
@@ -63,6 +65,11 @@ function Timers() {
   const handleSelectTimer = (index) => {
     setOpenCountdownTimerModal(true);
     setSelectedTimer(timerItems[index]);
+  };
+
+  const handleOpenDeleteModal = (index) => {
+    setOpenDeleteModal(true);
+    setTimerToDelete(timerItems[index]);
   };
 
   return (
@@ -99,6 +106,23 @@ function Timers() {
         </View>
       </Modal>
 
+      <Modal
+        visible={openDeleteModal}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setOpenDeleteModal(false)}
+      >
+        <View style={styles.centeredView}>
+          {openDeleteModal && (
+            <DeleteModal
+              handleModal={setOpenDeleteModal}
+              handleDeleteTimer={handleDeleteTimer}
+              selectedTimer={timerToDelete}
+            />
+          )}
+        </View>
+      </Modal>
+
       <View style={styles.background}>
         <Image
           style={styles.image}
@@ -114,6 +138,7 @@ function Timers() {
                 <TouchableOpacity
                   key={index}
                   onPress={() => handleSelectTimer(index)}
+                  onLongPress={() => handleOpenDeleteModal(index)}
                 >
                   <Timer
                     title={item.title}
